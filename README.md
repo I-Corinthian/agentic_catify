@@ -2,14 +2,10 @@
 
 **Agentic Catify** is an intelligent automated pipeline designed to transform standard short-form video content into high-retention videos featuring cat memes. By leveraging advanced AI models for audio transcription and semantic understanding, the system replaces original video visuals with contextually relevant cat images while preserving the original audio track.
 
-## 🎥 Demo
+| Demo 1 | Demo 2 |
+|------|------|
+| [![Demo 1](https://img.youtube.com/vi/asN08puC5sE/hqdefault.jpg)](https://www.youtube.com/shorts/asN08puC5sE) | [![Demo 2](https://img.youtube.com/vi/8sxKK_3d9Wc/hqdefault.jpg)](https://www.youtube.com/shorts/8sxKK_3d9Wc) |
 
-
-### Original Video
-<video src="results/vid3.mp4" controls width="300"></video>
-
-### Catified Result
-<video src="results/catify_vid.mp4" controls width="300"></video>
 
 ## 🚀 How It Works
 
