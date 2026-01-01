@@ -4,11 +4,12 @@
 
 ## 🎥 Demo
 
+
 ### Original Video
-![Original Video](results/vid3.mp4)
+<video src="results/vid3.mp4" controls width="300"></video>
 
 ### Catified Result
-![Catified Result](results/catify_vid.mp4)
+<video src="results/catify_vid.mp4" controls width="300"></video>
 
 ## 🚀 How It Works
 
