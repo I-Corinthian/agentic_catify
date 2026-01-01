@@ -30,6 +30,7 @@ Output format (strict JSON):
 
 If a segment feels intense, chaotic, or desperate, exaggerate it in a funny cat way.
 If a segment is calm or friendly, keep it cute or silly.
+Always Try to make it extremely funny as possible.
 """
 
 user_prompt = """

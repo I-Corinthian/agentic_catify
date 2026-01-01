@@ -1,0 +1,5 @@
+datasets
+assets
+cat_*
+__pycache__
+.env

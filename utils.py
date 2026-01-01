@@ -11,10 +11,10 @@ def get_image(tag: str, caption: str, seq_id: int):
 
     import requests
     from io import BytesIO
-    from PIL import Image, ImageSequence
+    from PIL import Image, ImageSequence, ImageDraw, ImageFont
 
     # --- download image ---
-    url = f"https://cataas.com/cat/{tag}/says/{caption}"
+    url = f"https://cataas.com/cat/{tag}"
     resp = requests.get(url)
     resp.raise_for_status()
 
@@ -55,6 +55,81 @@ def get_image(tag: str, caption: str, seq_id: int):
     y = (CANVAS_H - ih) // 2
 
     canvas.paste(img, (x, y))
+
+    # --- draw caption ---
+    if caption:
+        draw = ImageDraw.Draw(canvas)
+        
+        # Try to load a font
+        try:
+            font = ImageFont.truetype("DejaVuSans.ttf", 60)
+        except IOError:
+            try:
+                font = ImageFont.truetype("arial.ttf", 60)
+            except IOError:
+                font = ImageFont.load_default()
+
+        # Wrap text logic
+        margin = 40
+        max_width = CANVAS_W - 2 * margin
+        lines = []
+        words = caption.split()
+        current_line = []
+
+        for word in words:
+            current_line.append(word)
+            test_line = " ".join(current_line)
+            
+            if hasattr(draw, "textbbox"):
+                bbox = draw.textbbox((0, 0), test_line, font=font)
+                w = bbox[2] - bbox[0]
+            else:
+                w, _ = draw.textsize(test_line, font=font)
+            
+            if w > max_width:
+                if len(current_line) == 1:
+                    lines.append(current_line[0])
+                    current_line = []
+                else:
+                    current_line.pop()
+                    lines.append(" ".join(current_line))
+                    current_line = [word]
+        
+        if current_line:
+            lines.append(" ".join(current_line))
+
+        # Calculate heights
+        if hasattr(draw, "textbbox"):
+            bbox_sample = draw.textbbox((0, 0), "Ag", font=font)
+            line_height = (bbox_sample[3] - bbox_sample[1]) * 1.2
+        else:
+            _, h = draw.textsize("Ag", font=font)
+            line_height = h * 1.2
+
+        total_height = len(lines) * line_height
+        y_text = CANVAS_H - total_height - 150 
+
+        for line in lines:
+            if hasattr(draw, "textbbox"):
+                bbox = draw.textbbox((0, 0), line, font=font)
+                w_line = bbox[2] - bbox[0]
+            else:
+                w_line, _ = draw.textsize(line, font=font)
+                
+            x_text = (CANVAS_W - w_line) // 2
+            
+            # Draw outline/shadow
+            shadow_color = (0, 0, 0)
+            fill_color = (255, 255, 255)
+            offset = 3
+            
+            for off_x in range(-offset, offset+1, offset):
+                for off_y in range(-offset, offset+1, offset):
+                    if off_x == 0 and off_y == 0: continue
+                    draw.text((x_text + off_x, y_text + off_y), line, font=font, fill=shadow_color)
+            
+            draw.text((x_text, y_text), line, font=font, fill=fill_color)
+            y_text += line_height
 
     # --- save ---
     canvas.save(f"{seq_id}.png", format="PNG")
